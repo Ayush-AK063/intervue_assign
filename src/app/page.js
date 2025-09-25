@@ -48,7 +48,7 @@ export default function LandingPage() {
             }`}
           >
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              I'm a Student
+              I&apos;m a Student
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed flex-1">
               Lorem ipsum is simply dummy text of the printing and typesetting
@@ -66,7 +66,7 @@ export default function LandingPage() {
             }`}
           >
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              I'm a Teacher
+              I&apos;m a Teacher
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed flex-1">
               Submit answers and view live poll results in real-time.

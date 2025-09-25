@@ -23,7 +23,7 @@ export const SocketProvider = ({ children }) => {
   const socketInitialized = useRef(false);
 
   // Initialize socket and event handlers outside of useEffect
-  const setupSocket = () => {
+  const setupSocket = useCallback(() => {
     if (socketInitialized.current) return;
     
     console.log('🔌 Setting up socket connection');
@@ -76,12 +76,7 @@ export const SocketProvider = ({ children }) => {
 
     socket.on('chat_message', (message) => {
       console.log('💬 Chat message received:', message);
-      console.log('💬 Current messages before update:', messages);
-      setMessages(prev => {
-        const updated = [...prev, message];
-        console.log('💬 Updated messages:', updated);
-        return updated;
-      });
+      setMessages(prev => [...prev, message]);
     });
 
     // Check initial connection status
@@ -89,7 +84,7 @@ export const SocketProvider = ({ children }) => {
       console.log('🔗 Socket already connected');
       setIsConnected(true);
     }
-  };
+  }, [messages]);
 
   // Use useEffect only for component lifecycle
   useEffect(() => {
@@ -110,7 +105,7 @@ export const SocketProvider = ({ children }) => {
         socketInitialized.current = false;
       }
     };
-  }, []); // Empty dependency array - runs only once
+  }, [setupSocket]); // Include setupSocket in dependency array
 
   // Helper functions for components - using useCallback to prevent recreation
   const joinRoom = useCallback((roomName) => {
