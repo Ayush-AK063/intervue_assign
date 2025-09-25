@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Test</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Chat Test</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+    
+    <script>
+        const socket = io('http://localhost:5000');
+        
+        // Join as a test user
+        socket.emit('join', {
+            userId: 'student_test_123',
+            username: 'Test Student',
+            role: 'student'
+        });
+        
+        // Listen for messages
+        socket.on('new_message', (message) => {
+            console.log('Received message:', message);
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<div><strong>${message.sender?.username || message.username}:</strong> ${message.message}</div>`;
+        });
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (message) {
+                console.log('Sending message:', message);
+                socket.emit('send_message', { message: message });
+                input.value = '';
+            }
+        }
+        
+        // Send message on Enter key
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
