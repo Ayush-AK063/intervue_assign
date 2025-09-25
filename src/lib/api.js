@@ -1,4 +1,9 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// Use relative URL for production deployment on Vercel
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (
+  typeof window !== 'undefined' && window.location.origin 
+    ? `${window.location.origin}/api`
+    : 'http://localhost:5000/api'
+);
 
 class ApiClient {
   constructor() {
@@ -21,21 +26,21 @@ class ApiClient {
     }
 
     try {
+      console.log('Making API request to:', url); // Debug log
       const response = await fetch(url, config);
       const data = await response.json();
 
       if (!response.ok) {
+        console.error('API request failed:', response.status, data); // Debug log
         return { success: false, message: data.message || `HTTP error! status: ${response.status}` };
       }
 
-      return data;
+      return { success: true, data };
     } catch (error) {
-      console.error('API request failed:', error);
-      return { success: false, message: error.message || 'Network error' };
+      console.error('API request error:', error); // Debug log
+      return { success: false, message: error.message };
     }
   }
-
-
 
   // Poll endpoints
   async getPolls(params = {}) {
